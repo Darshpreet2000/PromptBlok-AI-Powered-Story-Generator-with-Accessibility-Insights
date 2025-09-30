@@ -12,12 +12,24 @@ import {
   MenuItem,
   FormControlLabel,
   Switch,
+  Card,
+  CardContent,
+  Divider,
+  Paper,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Chip,
 } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { styled } from '@mui/material/styles';
 import ImageIcon from '@mui/icons-material/Image';
 import LinkIcon from '@mui/icons-material/Link';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import TableChartIcon from '@mui/icons-material/TableChart';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { STORYBLOK_ACCESS_TOKEN } from '@/constants/access_constants';
 
 const StyledSection = styled(Box)(({ theme }) => ({
@@ -270,76 +282,173 @@ const ComponentGeneratorTab: React.FC<ComponentGeneratorTabProps> = ({
   };
 
   return (
-    <StyledSection>
-      <Typography variant="h5" component="h2" gutterBottom>
-        Component Generator
-      </Typography>
-      <Typography variant="body1" paragraph>
-        Enter a prompt to generate component blocks.
-      </Typography>
-      <TextField
-        label="Component Prompt"
-        multiline
-        rows={5}
-        fullWidth
-        value={componentPrompt}
-        onChange={(e) => setComponentPrompt(e.target.value)}
-        margin="normal"
-        variant="outlined"
-        disabled={isLoading || isPublishing}
-      />
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleGenerateComponent}
-        sx={{ mt: 2, mr: 2 }}
-        disabled={isLoading || isPublishing || !componentPrompt.trim()}
-      >
-        {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Generate Component'}
-      </Button>
-      <Button
-        variant="contained"
-        color="success"
-        onClick={handlePublishComponent}
-        sx={{ mt: 2 }}
-        disabled={!isComponentGenerated || isPublishing}
-      >
-        {isPublishing ? <CircularProgress size={24} color="inherit" /> : 'Publish Component'}
-      </Button>
+    <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 3 }}>
+      {/* Input Section */}
+      <Card elevation={2} sx={{ transition: 'all 0.3s ease', '&:hover': { elevation: 4 } }}>
+        <CardContent sx={{ p: 3 }}>
+          <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 600 }}>
+            Component Generator
+          </Typography>
+          <Typography variant="body1" paragraph color="text.secondary">
+            Enter a prompt to generate Storyblok component blocks.
+          </Typography>
 
-      {successMessage && (
-        <Alert severity="success" sx={{ mt: 2 }}>
-          {successMessage}
-        </Alert>
-      )}
-      {error && (
-        <Alert severity="error" sx={{ mt: 2 }}>
-          {error}
-        </Alert>
-      )}
+          <Accordion elevation={0} sx={{ mb: 2, '&:before': { display: 'none' } }}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="component-help-content"
+              id="component-help-header"
+              sx={{ px: 0, minHeight: 48 }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <HelpOutlineIcon color="primary" />
+                <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                  How to use Component Generator
+                </Typography>
+              </Box>
+            </AccordionSummary>
+            <AccordionDetails sx={{ px: 0 }}>
+              <Typography variant="body2" paragraph>
+                <strong>What it does:</strong> This AI-powered tool generates complete Storyblok component schemas based on your natural language descriptions. The generated components include all necessary fields, validation rules, and UI previews.
+              </Typography>
 
-      <Box sx={{ mt: 4, borderTop: '1px solid #eee', paddingTop: 3 }}>
-        <Typography variant="h6" component="h3" gutterBottom>
-          Raw Component JSON
-        </Typography>
-        <StyledPre>
-          {generatedComponentBlocks}
-        </StyledPre>
+              <Typography variant="body2" paragraph>
+                <strong>Tips for better results:</strong>
+              </Typography>
+              <Box component="ul" sx={{ pl: 2, mb: 2 }}>
+                <Typography component="li" variant="body2" sx={{ mb: 1 }}>
+                  Be specific about the component's purpose (e.g., "hero banner", "testimonial card", "pricing table")
+                </Typography>
+                <Typography component="li" variant="body2" sx={{ mb: 1 }}>
+                  Mention required fields and their types (text, image, link, etc.)
+                </Typography>
+                <Typography component="li" variant="body2" sx={{ mb: 1 }}>
+                  Include styling or layout preferences when relevant
+                </Typography>
+                <Typography component="li" variant="body2" sx={{ mb: 1 }}>
+                  Specify if the component should be nestable or have specific validation rules
+                </Typography>
+              </Box>
 
-        {parsedComponentSchema && (
-          <Box sx={{ mt: 4, borderTop: '1px solid #eee', paddingTop: 3 }}>
-            <Typography variant="h6" component="h3" gutterBottom>
-              UI Preview
-            </Typography>
-            <Box sx={{ mt: 2 }}>
-              {Object.entries(parsedComponentSchema).map(([fieldName, field]) =>
-                renderFieldPreview(fieldName, field)
-              )}
-            </Box>
+              <Typography variant="body2" paragraph>
+                <strong>Example prompts:</strong>
+              </Typography>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
+                <Chip
+                  label="Create a hero banner with title, subtitle, background image, and CTA button"
+                  size="small"
+                  variant="outlined"
+                  sx={{ cursor: 'pointer' }}
+                  onClick={() => setComponentPrompt('Create a hero banner with title, subtitle, background image, and CTA button')}
+                />
+                <Chip
+                  label="Build a testimonial component with name, role, company, photo, and quote"
+                  size="small"
+                  variant="outlined"
+                  sx={{ cursor: 'pointer' }}
+                  onClick={() => setComponentPrompt('Build a testimonial component with name, role, company, photo, and quote')}
+                />
+                <Chip
+                  label="Design a pricing card with plan name, price, features list, and signup button"
+                  size="small"
+                  variant="outlined"
+                  sx={{ cursor: 'pointer' }}
+                  onClick={() => setComponentPrompt('Design a pricing card with plan name, price, features list, and signup button')}
+                />
+              </Box>
+
+              <Typography variant="body2" color="text.secondary">
+                After generating, review the UI preview and publish directly to your selected Storyblok space.
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+          <TextField
+            label="Component Prompt"
+            multiline
+            rows={5}
+            value={componentPrompt}
+            onChange={(e) => setComponentPrompt(e.target.value)}
+            margin="normal"
+            variant="outlined"
+            disabled={isLoading || isPublishing}
+            sx={{ mb: 3, maxWidth: 800, width: '100%' }}
+          />
+          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleGenerateComponent}
+              disabled={isLoading || isPublishing || !componentPrompt.trim()}
+              startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : <PlayArrowIcon />}
+              sx={{ minWidth: 160 }}
+            >
+              {isLoading ? 'Generating...' : 'Generate Component'}
+            </Button>
+            <Button
+              variant="contained"
+              color="success"
+              onClick={handlePublishComponent}
+              disabled={!isComponentGenerated || isPublishing}
+              startIcon={isPublishing ? <CircularProgress size={20} color="inherit" /> : <CloudUploadIcon />}
+              sx={{ minWidth: 160 }}
+            >
+              {isPublishing ? 'Publishing...' : 'Publish Component'}
+            </Button>
           </Box>
-        )}
-      </Box>
-    </StyledSection>
+        </CardContent>
+      </Card>
+
+      {/* Alerts */}
+      {(successMessage || error) && (
+        <Box>
+          {successMessage && <Alert severity="success">{successMessage}</Alert>}
+          {error && <Alert severity="error">{error}</Alert>}
+        </Box>
+      )}
+
+      {/* Two Column Layout for Results */}
+      {generatedComponentBlocks !== '// Generated component JSON will appear here' && (
+        <Box sx={{ display: 'flex', gap: 3, flexDirection: { xs: 'column', lg: 'row' } }}>
+          {/* Results Section - Left */}
+          <Box sx={{ flex: 1 }}>
+            <Card elevation={2} sx={{ transition: 'all 0.3s ease', '&:hover': { elevation: 4 } }}>
+              <CardContent sx={{ p: 3 }}>
+                <Typography variant="h6" component="h3" gutterBottom sx={{ fontWeight: 600 }}>
+                  Raw Component JSON
+                </Typography>
+                <StyledPre>
+                  {generatedComponentBlocks}
+                </StyledPre>
+              </CardContent>
+            </Card>
+          </Box>
+
+          {/* UI Preview Section - Right */}
+          {parsedComponentSchema && (
+            <Box sx={{ flex: 1 }}>
+              <Card elevation={2} sx={{ transition: 'all 0.3s ease', '&:hover': { elevation: 4 } }}>
+                <CardContent sx={{ p: 3 }}>
+                  <Typography variant="h6" component="h3" gutterBottom sx={{ fontWeight: 600 }}>
+                    UI Preview
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                    Preview how your component fields will appear in the Storyblok editor.
+                  </Typography>
+                  <Divider sx={{ mb: 3 }} />
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    {Object.entries(parsedComponentSchema).map(([fieldName, field]) => (
+                      <Paper key={fieldName} elevation={1} sx={{ p: 2, borderRadius: 2 }}>
+                        {renderFieldPreview(fieldName, field)}
+                      </Paper>
+                    ))}
+                  </Box>
+                </CardContent>
+              </Card>
+            </Box>
+          )}
+        </Box>
+      )}
+    </Box>
   );
 };
 

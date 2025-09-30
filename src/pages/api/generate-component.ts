@@ -17,7 +17,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ message: 'Gemini model name is required.' });
   }
 
-  // const geminiApiKey = "AIzaSyBCpZoV9403JiGqgWN9s5qKWXy5eB7DHW4";
   const geminiApiKey = GEMINI_API_KEY;
   if (!geminiApiKey) {
     console.error('GEMINI_API_KEY is not set in .env.local');
