@@ -13,6 +13,7 @@ export default async function handler(
 }
 
 const fetchUserInfo = async (accessToken: string) => {
+	console.log('Fetching user info with access token:', accessToken);
 	try {
 		const response = await fetch(`https://api.storyblok.com/oauth/user_info`, {
 			headers: {

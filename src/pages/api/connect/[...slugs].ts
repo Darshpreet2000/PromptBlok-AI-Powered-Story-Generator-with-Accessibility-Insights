@@ -6,4 +6,6 @@ export const config = {
 	},
 };
 
+export const dynamic = 'force-dynamic'; // Add this line
+
 export default handleConnect;
