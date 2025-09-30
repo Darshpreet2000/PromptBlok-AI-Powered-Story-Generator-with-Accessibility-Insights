@@ -1,41 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Button,
   TextField,
   Typography,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   CircularProgress,
   Alert,
+  Chip,
+  IconButton, // Added IconButton for copy functionality
+  Tooltip, // Added Tooltip for copy functionality
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy'; // Added copy icon
+import { useTheme } from '@mui/material/styles'; // Import useTheme
 import { STORYBLOK_ACCESS_TOKEN } from '@/constants/access_constants';
-import { useEffect } from 'react';
-
-const StyledSection = styled(Box)(({ theme }) => ({
-  marginBottom: theme.spacing(4),
-  border: '1px solid #eee',
-  padding: theme.spacing(3),
-  borderRadius: theme.shape.borderRadius,
-}));
-
-const StyledPre = styled('pre')(({ theme }) => ({
-  backgroundColor: '#f8f8f8',
-  padding: theme.spacing(2),
-  borderRadius: theme.shape.borderRadius,
-  overflowX: 'auto',
-  whiteSpace: 'pre-wrap',
-  wordBreak: 'break-word',
-}));
 
 interface StoryContentGeneratorTabProps {
   storyPrompt: string;
   setStoryPrompt: (prompt: string) => void;
-  selectedComponents: string[];
-  setSelectedComponents: (components: string[]) => void;
   generatedStoryContent: string;
   setGeneratedStoryContent: (content: string) => void;
   spaceId: string; // Add spaceId prop
@@ -44,12 +25,11 @@ interface StoryContentGeneratorTabProps {
 const StoryContentGeneratorTab: React.FC<StoryContentGeneratorTabProps> = ({
   storyPrompt,
   setStoryPrompt,
-  selectedComponents,
-  setSelectedComponents,
   generatedStoryContent,
   setGeneratedStoryContent,
   spaceId, // Destructure spaceId
 }) => {
+  const theme = useTheme(); // Initialize theme
   const [availableComponents, setAvailableComponents] = useState<any[]>([]);
   const [isLoadingComponents, setIsLoadingComponents] = useState(false);
   const [componentsError, setComponentsError] = useState<string | null>(null);
@@ -59,6 +39,10 @@ const StoryContentGeneratorTab: React.FC<StoryContentGeneratorTabProps> = ({
   const [storyPublishError, setStoryPublishError] = useState<string | null>(null);
   const [storyPublishSuccess, setStoryPublishSuccess] = useState<string | null>(null);
 
+  const handleCopyToClipboard = () => {
+    navigator.clipboard.writeText(generatedStoryContent);
+    // Optionally, show a temporary success message
+  };
 
   useEffect(() => {
     const fetchComponents = async () => {
@@ -167,37 +151,45 @@ const StoryContentGeneratorTab: React.FC<StoryContentGeneratorTabProps> = ({
   };
 
   return (
-    <StyledSection>
+    <Box
+      sx={{
+        marginBottom: theme.spacing(4),
+        border: '1px solid #eee',
+        padding: theme.spacing(3),
+        borderRadius: theme.shape.borderRadius,
+      }}
+    >
       <Typography variant="h5" component="h2" gutterBottom>
         Story Content Generator
       </Typography>
       <Typography variant="body1" paragraph>
         Fetch existing components and generate story content based on a prompt.
       </Typography>
-      <FormControl fullWidth margin="normal">
-        <InputLabel id="component-select-label">Select Existing Components</InputLabel>
-        <Select
-          labelId="component-select-label"
-          id="component-select"
-          multiple
-          value={selectedComponents}
-          onChange={(e) => setSelectedComponents(e.target.value as string[])}
-          renderValue={(selected) => (selected as string[]).join(', ')}
-          label="Select Existing Components"
-          disabled={isLoadingComponents || isGeneratingStory}
-        >
-          {isLoadingComponents && <MenuItem disabled>Loading components...</MenuItem>}
-          {componentsError && <MenuItem disabled>Error: {componentsError}</MenuItem>}
-          {!isLoadingComponents && availableComponents.length === 0 && !componentsError && (
-            <MenuItem disabled>No components found. Enter a Space ID.</MenuItem>
-          )}
-          {availableComponents.map((component) => (
-            <MenuItem key={component.id} value={component.name}>
-              {component.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+
+      <Box sx={{ my: 4 }}>
+        <Typography variant="h6" component="h3" gutterBottom>
+          Available Storyblok Components
+        </Typography>
+        {isLoadingComponents && <CircularProgress size={24} />}
+        {componentsError && <Alert severity="error">{componentsError}</Alert>}
+        {!isLoadingComponents && availableComponents.length === 0 && !componentsError && (
+          <Alert severity="info">No components found. Please ensure a valid Space ID is entered.</Alert>
+        )}
+        {!isLoadingComponents && availableComponents.length > 0 && (
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2, mb: 3 }}>
+            {availableComponents.map((component) => (
+              <Chip
+                key={component.id}
+                label={component.name}
+                variant="outlined"
+                color="primary"
+                sx={{ '& .MuiChip-label': { fontWeight: 'normal' } }} // Make chip label non-bold
+              />
+            ))}
+          </Box>
+        )}
+      </Box>
+
       <TextField
         label="Story Prompt"
         multiline
@@ -209,24 +201,26 @@ const StoryContentGeneratorTab: React.FC<StoryContentGeneratorTabProps> = ({
         variant="outlined"
         disabled={isGeneratingStory}
       />
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={handleGenerateStoryContent}
-        sx={{ mt: 2 }}
-        disabled={isGeneratingStory || !storyPrompt.trim() || selectedComponents.length === 0}
-      >
-        {isGeneratingStory ? <CircularProgress size={24} color="inherit" /> : 'Generate Story Content'}
-      </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handlePublishStoryContent}
-        sx={{ mt: 2, ml: 2 }}
-        disabled={isGeneratingStory || isPublishingStory || !generatedStoryContent.trim()}
-      >
-        {isPublishingStory ? <CircularProgress size={24} color="inherit" /> : 'Publish Story Content'}
-      </Button>
+      <Box sx={{ mt: 3, mb: 2, display: 'flex', gap: 2 }}>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleGenerateStoryContent}
+          disabled={isGeneratingStory || !storyPrompt.trim() || availableComponents.length === 0}
+          startIcon={isGeneratingStory ? <CircularProgress size={20} color="inherit" /> : null}
+        >
+          Generate Story Content
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handlePublishStoryContent}
+          disabled={isGeneratingStory || isPublishingStory || !generatedStoryContent.trim()}
+          startIcon={isPublishingStory ? <CircularProgress size={20} color="inherit" /> : null}
+        >
+          Publish Story Content
+        </Button>
+      </Box>
       {storyGenerationError && (
         <Alert severity="error" sx={{ mt: 2 }}>
           {storyGenerationError}
@@ -243,14 +237,33 @@ const StoryContentGeneratorTab: React.FC<StoryContentGeneratorTabProps> = ({
         </Alert>
       )}
       <Box sx={{ mt: 4, borderTop: '1px solid #eee', paddingTop: 3 }}>
-        <Typography variant="h6" component="h3" gutterBottom>
-          Generated Story Content
-        </Typography>
-        <StyledPre>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <Typography variant="h6" component="h3" gutterBottom>
+            Generated Story Content
+          </Typography>
+          <Tooltip title="Copy to Clipboard">
+            <IconButton onClick={handleCopyToClipboard} aria-label="copy to clipboard" size="small">
+              <ContentCopyIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </Box>
+        <Box
+          sx={{
+            backgroundColor: '#272727',
+            color: '#f8f8f8',
+            padding: theme.spacing(2),
+            borderRadius: theme.shape.borderRadius,
+            overflowX: 'auto',
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+            border: '1px solid #ddd',
+            fontFamily: 'monospace',
+          }}
+        >
           {generatedStoryContent}
-        </StyledPre>
+        </Box>
       </Box>
-    </StyledSection>
+    </Box>
   );
 };
 

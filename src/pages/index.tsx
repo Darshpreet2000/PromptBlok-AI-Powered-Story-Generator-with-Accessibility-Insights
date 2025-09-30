@@ -13,7 +13,7 @@ export default function Home() {
 	return (
 		<>
 			<Head>
-				<title>Storyblok Space Plugin</title>
+				<title>Prompt Blok</title>
 				<meta name="description" content="Storyblok Space Plugin with Component and Story Content Generators" />
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
 			</Head>
