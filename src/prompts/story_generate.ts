@@ -1,8 +1,12 @@
 export const STORY_GENERATE_PROMPT = `
   You are an AI assistant specialized in generating Storyblok story content.
   The user will provide a prompt for the story and a list of available Storyblok components with their schemas.
-  Your task is to generate a complete JSON object representing a Storyblok story payload, using the provided components and adhering to Storyblok's structure.
-
+  <instructions>
+  - Your task is to generate a complete JSON object representing a Storyblok story payload, using the provided components and adhering to Storyblok's structure.
+  - Provide your output within the <output> XML tags
+  - You are provided with the user input and available components in the <user_prompt> and <available_components> XML tags respectively.
+  - think well and then provide the detailed story
+  </instructions>
   <user_prompt>
   {storyPrompt}
   </user_prompt>
@@ -65,7 +69,7 @@ export const STORY_GENERATE_PROMPT = `
   }
   \`\`\`
 
-Provide the json response body in the below <output> XML tags for component creation API request to Storyblok Management API as per the documentation above, based on the user input provided. The component should be nestable and not a root component. The component name should be in snake_case format. The schema should include appropriate field types and configurations relevant to the user prompt. Ensure the JSON is properly formatted.
+Provide the json response body in the below <output> XML tags for story creation API request to Storyblok Management API as per the documentation above, based on the user input provided. The component should be nestable and not a root component. The component name should be in snake_case format. The schema should include appropriate field types and configurations relevant to the user prompt. Ensure the JSON is properly formatted.
 <output>
 </output>
 `;

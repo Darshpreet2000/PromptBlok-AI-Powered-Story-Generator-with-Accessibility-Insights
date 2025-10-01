@@ -48,7 +48,7 @@ interface Story {
   content: any;
 }
 
-const STORYBLOK_TOKEN = 'zXV6V1kqEGMqRrhhBZMtKwtt'; // Provided by the user
+const STORYBLOK_TOKEN = ''; // Provided by the user
 
 const AccessibilityReportTab: React.FC<AccessibilityReportTabProps> = ({
   accessibilityReport,
@@ -282,3 +282,4 @@ const AccessibilityReportTab: React.FC<AccessibilityReportTabProps> = ({
 };
 
 export default AccessibilityReportTab;
+
