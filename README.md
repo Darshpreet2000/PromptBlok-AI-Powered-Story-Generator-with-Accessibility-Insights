@@ -1,157 +1,276 @@
-# Storyblok Space Starter x Next.js
+# PromptBlok - AI-Powered Story Generator with Accessibility Insights
 
-This is a starter template for Storyblok Space Plugins, created with Next.js (Pages Router) and [@storyblok/app-extension-auth](https://github.com/storyblok/app-extension-auth).
+**PromptBlok** is a powerful Storyblok Space Plugin that leverages Google's Generative AI (Gemini) to revolutionize content creation workflows. It enables users to generate Storyblok components and complete stories through natural language prompts, while providing AI-powered accessibility analysis to ensure inclusive content.
 
-> WARNING: App Bridge should be activated in the Extension for this template to work.
+## 🚀 Demo
 
-## Getting Started
+[![PromptBlok Demo Video](https://img.shields.io/badge/YouTube-Demo%20Video-red?style=for-the-badge&logo=youtube)](https://www.youtube.com/watch?v=yiGru0iyr88)
 
-```shell
-npx giget@latest gh:storyblok/space-tool-plugins/space-plugins/nextjs-starter YOUR-PROJECT-NAME
+**Live Demo**: [https://prompt-blok-ai-powered-story-generator.vercel.app/](https://prompt-blok-ai-powered-story-generator.vercel.app/)
+
+## ✨ Features
+
+### 🤖 Component Generator
+- **AI-Powered Schema Creation**: Generate complete Storyblok component schemas using natural language prompts
+- **Interactive UI Preview**: See how your components will look in the Storyblok editor before publishing
+- **Direct Publishing**: Publish generated components directly to your Storyblok space
+- **Comprehensive Field Types**: Support for all Storyblok field types including text, images, rich text, tables, and more
+
+### 📝 Story Content Generator
+- **Complete Story Creation**: Generate entire Storyblok stories by combining your available components
+- **Component Integration**: Automatically utilizes existing components in your space
+- **Context-Aware Generation**: AI understands your component library and generates appropriate content structures
+
+### ♿ Accessibility Report
+- **AI-Powered Analysis**: Comprehensive accessibility evaluation of your Storyblok content
+- **WCAG Compliance**: Identifies potential accessibility issues and provides actionable recommendations
+- **Content Enhancement**: Suggests improvements for better inclusivity
+
+### ⚙️ Settings & Configuration
+- **Personal Access Tokens**: Securely manage your Storyblok and Google Gemini API credentials
+- **Space Configuration**: Easily configure space-specific settings
+- **Responsive Design**: Works seamlessly across desktop and mobile devices
+
+## 🏗️ Architecture
+
+PromptBlok is built as a Storyblok Space Plugin using:
+- **Frontend**: Next.js 13 with Pages Router, Material-UI, and TypeScript
+- **AI Integration**: Google Generative AI (Gemini 2.0 Flash) for content generation
+- **Backend**: Serverless API routes for secure API interactions
+- **Content Management**: Direct integration with Storyblok Management API
+- **Authentication**: Storyblok App Bridge for secure space plugin authentication
+
+## 📋 Prerequisites
+
+- Node.js 18.x or higher
+- pnpm package manager
+- Google Gemini API key
+- Storyblok Personal Access Token
+- ngrok or similar tunneling service for local development
+
+## 🚀 Quick Start
+
+### 1. Clone and Install
+
+```bash
+git clone https://github.com/Darshpreet2000/PromptBlok-AI-Powered-Story-Generator-with-Accessibility-Insights.git
+cd PromptBlok-AI-Powered-Story-Generator-with-Accessibility-Insights
+
+# Install dependencies
+pnpm install
 ```
 
-## How to run
+### 2. Environment Configuration
 
-Navigate to your project folder and install dependencies by running:
+Create a `.env.local` file in the root directory:
 
-```shell
-cd YOUR-PROJECT-NAME
-
-pnpm install # yarn install or npm install
+```env
+# Storyblok Configuration
+CLIENT_ID=your_storyblok_client_id
+CLIENT_SECRET=your_storyblok_client_secret
+BASE_URL=https://your-ngrok-url.ngrok.io
 ```
 
-Set up a secure tunnel to proxy your request to/from `localhost:3000`, for example, with [ngrok](https://ngrok.com/):
+### 3. API Token Setup
 
-```shell
+Update the `src/constants/access_constants.ts` file with your API keys:
+
+```typescript
+export const STORYBLOK_ACCESS_TOKEN = "your_storyblok_personal_access_token";
+export const GEMINI_API_KEY = "your_google_gemini_api_key";
+```
+
+**Additional setup for Accessibility Report:**
+Update the `STORYBLOK_TOKEN` constant in `src/components/AccessibilityReportTab.tsx`:
+
+```typescript
+const STORYBLOK_TOKEN = 'your_storyblok_public_access_token'; // Line 51
+```
+
+**How to get these tokens:**
+- **Storyblok Personal Access Token**: Go to your Storyblok account settings → Personal Access Tokens → Generate new token (used for API management operations)
+- **Storyblok Public Access Token**: In your Storyblok space settings → Access Tokens → Generate public token (used for content fetching in accessibility reports)
+- **Google Gemini API Key**: Visit [Google AI Studio](https://makersuite.google.com/app/apikey) → Create API key
+
+### 4. Development Setup
+
+```bash
+# Start development server
+pnpm dev
+```
+
+### 4. Local Tunneling
+
+For Storyblok integration, expose your local server:
+
+```bash
+# Using ngrok
 ngrok http 3000
 ```
 
-Note down your assigned URL; this will be your `baseUrl` for the application.
+Note the generated URL (e.g., `https://abc123.ngrok.io`) for the next steps.
 
-### Create a new Storyblok Extension
+## 🔧 Storyblok Extension Setup
 
-There are two ways on how you can create a Space Plugin inside Storyblok. Depending on your plan and use case, choose one of the following options:
+### Partner Portal Setup
 
-#### Partner Portal
+1. Navigate to [Storyblok Partner Portal](https://app.storyblok.com/#/partner/apps)
+2. Click **New Extension**
+3. Fill in extension details:
+   - **Name**: PromptBlok AI Generator
+   - **Slug**: promptblok-ai-generator
+4. Select **Sidebar** as extension type
+5. Click **Save**
 
-1. Open [Storyblok's Partner Portal Extension View](https://app.storyblok.com/#/partner/apps)
-2. Click On **New Extension**
-3. Fill in the fields `name` and `slug`
-4. Select `Sidebar` as extension type
-5. Click on **Save**
+### Organization Setup (Alternative)
 
-#### Organization
+1. Go to [Organization Extensions](https://app.storyblok.com/#/me/org/apps)
+2. Click **New Extension**
+3. Configure as above
 
-1. Open [Storyblok's Organization Extension View](https://app.storyblok.com/#/me/org/apps)
-2. Click On **New Extension**
-3. Fill in the fields `name` and `slug`
-4. Select `Sidebar` as extension type
-5. Click on **Save**
+### Extension Configuration
 
-### Configuration
+In your extension settings:
 
-Once the extension has been created, a new entry will appear inside the extension list. Open it and navigate to the `OAuth 2.0 and Pages` tab.
+- **Index to your page**: `{BASE_URL}` (your ngrok URL)
+- **Redirection endpoint**: `{BASE_URL}/api/connect/callback`
+- **Enable App Bridge**: ✅ Required
 
-Configure the following properties based on the previous steps:
+### Space Installation
 
-- **Index to your page**: `{baseUrl}`
-- **Redirection endpoint**: `{baseUrl}/api/connect/callback`
+1. Open extension's **General** tab
+2. Click **Install Link** in new tab
+3. Select target space
+4. Navigate to space: **Apps > PromptBlok AI Generator**
 
-### Configure Starter Environment Variables
+## 🎯 Usage Guide
 
-Rename the file `.env.local.example` to `.env.local`. Open the file and set the environmental variables:
+### Component Generation
 
-- `CLIENT_ID`: the client ID from the extension's settings page.
-- `CLIENT_SECRET`: the client secret from the extension's settings page.
-- `BASE_URL`: The `baseUrl` from your secure tunnel.
+1. **Access Component Generator**: Click the "Component Generator" tab
+2. **Enter Prompt**: Describe your desired component (e.g., "Create a hero banner with title, subtitle, background image, and CTA button")
+3. **Generate**: Click "Generate Component" to create the schema
+4. **Preview**: Review the UI preview and raw JSON
+5. **Publish**: Click "Publish Component" to add it to your Storyblok space
 
-Start the application by running:
+### Story Content Generation
 
-```shell
-pnpm dev # yarn dev or npm run dev
+1. **Access Story Generator**: Click the "Story Content Generator" tab
+2. **Enter Prompt**: Describe the story content you want to create
+3. **Generate**: The AI will create a complete story using your available components
+4. **Review & Publish**: Examine the generated content and publish to Storyblok
+
+### Accessibility Analysis
+
+1. **Access Reports**: Click the "Accessibility Report" tab
+2. **Generate Report**: Click to analyze your content
+3. **Review Insights**: Get AI-powered accessibility recommendations
+
+### Settings Configuration
+
+1. **Access Settings**: Click the "Settings" tab
+2. **Space Settings**: Configure space-specific preferences (Note: API tokens are configured in the constants file)
+
+## 🛠️ Tech Stack
+
+- **Framework**: Next.js 13 (Pages Router)
+- **Language**: TypeScript
+- **UI Library**: Material-UI (@mui/material)
+- **AI**: Google Generative AI (Gemini)
+- **CMS**: Storyblok Management API
+- **Authentication**: Storyblok App Bridge
+- **Styling**: Material-UI Theme System
+- **Markdown**: React Markdown + Remark GFM
+- **Build Tool**: pnpm
+
+## 📁 Project Structure
+
+```
+PromptBlok/
+├── src/
+│   ├── components/          # React components
+│   │   ├── ComponentGeneratorTab.tsx
+│   │   ├── StoryContentGeneratorTab.tsx
+│   │   ├── AccessibilityReportTab.tsx
+│   │   ├── SettingsTab.tsx
+│   │   └── SpacePluginUI.tsx
+│   ├── pages/               # Next.js pages and API routes
+│   │   ├── api/             # Serverless API functions
+│   │   │   ├── generate-component.ts
+│   │   │   ├── generate-story-content.ts
+│   │   │   ├── generate-accessibility-report.ts
+│   │   │   └── create-storyblok-component.ts
+│   │   ├── plugin.tsx       # Main plugin page
+│   │   └── index.tsx        # Settings/configuration page
+│   ├── prompts/             # AI prompt templates
+│   │   ├── component_generate.ts
+│   │   ├── story_generate.ts
+│   │   └── accessibility_report_generate.ts
+│   ├── constants/           # API keys and configuration
+│   ├── utils/               # Helper functions
+│   └── types/               # TypeScript type definitions
+├── public/                  # Static assets
+├── docs/                    # Documentation images
+├── package.json
+├── tsconfig.json
+└── next.config.js
 ```
 
-### App Bridge
+## 🔐 Environment Variables
 
-App Bridge is an extra authentication layer recently introduced for Space Plugins and Tool Plugins. This starter assumes you've enabled App Bridge on the Settings page. Documentation on App Bridge will come in the near future, but you don't need to know about its inner process. This starter addresses a large portion of this aspect out of the box.
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `CLIENT_ID` | Storyblok OAuth Client ID | Yes |
+| `CLIENT_SECRET` | Storyblok OAuth Client Secret | Yes |
+| `BASE_URL` | Local development URL (ngrok) | Yes |
 
-<img src="./docs/app-bridge.png" alt="App Bridge" width="600" />
+**Note**: API tokens (GEMINI_API_KEY and STORYBLOK_ACCESS_TOKEN) are configured directly in `src/constants/access_constants.ts`.
 
-If you don't want to use App Bridge, you can use [the legacy template](https://github.com/storyblok/custom-app-examples/tree/main/app-nextjs-starter).
+## 🚀 Deployment
 
-### App Bridge in Depth
+### Vercel Deployment
 
-App Bridge authentication starts on the frontend by sending a postMessage to `app.storyblok.com`. In the `src/pages/index.tsx` file, you can find the following code:
+1. **Connect Repository**: Link your GitHub repo to Vercel
+2. **Environment Variables**: Set all required environment variables in Vercel dashboard
+3. **Build Settings**: Ensure `pnpm` is selected as package manager
+4. **Domain**: Update extension settings with production URL
 
-```jsx
-const { completed } = useAppBridge({ type: 'space-plugin', oauth: true });
+### Manual Deployment
 
-return (
-	<div>
-		{completed && (
-			<div>
-				<UserInfo />
-				<Example />
-			</div>
-		)}
-	</div>
-);
+```bash
+# Build for production
+pnpm build
+
+# Start production server
+pnpm start
 ```
 
-The code above handles both App Bridge authentication and OAuth.
+## 🤝 Contributing
 
-1. If you need to use Storyblok's Management API:
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit changes: `git commit -m 'Add amazing feature'`
+4. Push to branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
 
-After completing both authentications, the `<UserInfo />` component is rendered. This component sends a request to `/api/user_info`. The OAuth token is automatically included in the request as a cookie, and the endpoint retrieves the session using `await getAppSession(req, res)`. It then fetches user information from Storyblok's Management API using the OAuth token.
+## 📝 License
 
-2. If you don't need the Management API but still want to validate the request on the backend:
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-When the `<Example />` component is rendered, it makes a request to `/api/example`. We attach the App Bridge token as a header. The endpoint verifies the token using `await verifyAppBridgeHeader(req)`. Only if the token is verified can you perform any desired action.
+## 🙏 Acknowledgments
 
-### Extension Installation
+- **Storyblok**: For the amazing headless CMS platform
+- **Google AI**: For the powerful Generative AI capabilities
+- **Material-UI**: For the comprehensive React component library
+- **Storyblok Community**: For inspiration and best practices
 
-Finally, install the application to your space:
+## 📞 Support
 
-1. Navigate to the extension's settings page.
-2. Open the **General Tab**.
-3. Open the **Install Link** in a new browser tab.
-4. Select a space the Space Plugin should be installed to.
-5. Open the selected space from Step 4.
-6. Click `Apps > <Your Extension Name>` on the sidebar.
+For questions, issues, or contributions:
 
-The installation process is only done once per space. After the installation is finished, you will be able to navigate to the Apps section on the sidebar and access the Space Plugin.
+- **GitHub Issues**: [Report bugs or request features](https://github.com/Darshpreet2000/PromptBlok-AI-Powered-Story-Generator-with-Accessibility-Insights/issues)
+- **Storyblok Community**: Join discussions on the [Storyblok Forum](https://forum.storyblok.com/)
 
-## Production
+---
 
-When deploying your Space Plugin, please remember to adjust the extension settings inside the Storyblok App to point to the correct **Index to your page** and **Redirection endpoint**.
-
-## Read More
-
-For more detailed information on Storyblok extensions, read the following guides:
-
-- [Space Plugin](https://www.storyblok.com/docs/plugins/custom-application)
-- [OAuth 2.0 Authorization Flow](https://www.storyblok.com/docs/plugins/authentication-apps)
-
-## Troubleshooting
-
-If you have trouble setting up the development environment, please review the following:
-
-1. Ensure that the `.env.local` file is correctly set up with the following variables:
-
-   - `CLIENT_ID=`
-   - `CLIENT_SECRET=`
-   - `BASE_URL=`
-
-2. Ensure that the tunnel is correctly set up with the `BASE_URL`.
-
-3. Ensure that the extension settings inside Storyblok are correctly set up with the following properties:
-   - **Index to your page**: `{BASE_URL}`
-   - **Redirection endpoint**: `{BASE_URL}/api/connect/callback`
-
-<img src="./docs/oauth-urls.png" alt="App Bridge" width="600" />
-
-4. Ensure that the extension settings inside Storyblok have the "Use App Bridge" option enabled.
-
-<img src="./docs/app-bridge.png" alt="App Bridge" width="600" />
-
-5. Ensure that the ad-blocker browser extensions are disabled when developing the extension.
+**Built with ❤️ for the Storyblok community**
