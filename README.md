@@ -4,9 +4,17 @@
 
 ## 🚀 Demo
 
-[![PromptBlok Demo Video](https://img.shields.io/badge/YouTube-Demo%20Video-red?style=for-the-badge&logo=youtube)](https://www.youtube.com/watch?v=yiGru0iyr88)
+### 🎥 Demo Video
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=yiGru0iyr88" target="_blank">
+    <img src="https://img.youtube.com/vi/yiGru0iyr88/maxresdefault.jpg" alt="PromptBlok Demo Video" width="600" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+  </a>
+  <br>
+  <em>Click the image to watch the full demo video</em>
+</p>
 
-**Live Demo**: [https://prompt-blok-ai-powered-story-generator.vercel.app/](https://prompt-blok-ai-powered-story-generator.vercel.app/)
+### 🌐 Live Demo
+**Try PromptBlok live**: [https://prompt-blok-ai-powered-story-generator.vercel.app/](https://prompt-blok-ai-powered-story-generator.vercel.app/)
 
 ## ✨ Features
 
@@ -60,18 +68,8 @@ cd PromptBlok-AI-Powered-Story-Generator-with-Accessibility-Insights
 pnpm install
 ```
 
-### 2. Environment Configuration
 
-Create a `.env.local` file in the root directory:
-
-```env
-# Storyblok Configuration
-CLIENT_ID=your_storyblok_client_id
-CLIENT_SECRET=your_storyblok_client_secret
-BASE_URL=https://your-ngrok-url.ngrok.io
-```
-
-### 3. API Token Setup
+### 2. API Token Setup
 
 Update the `src/constants/access_constants.ts` file with your API keys:
 
@@ -92,7 +90,7 @@ const STORYBLOK_TOKEN = 'your_storyblok_public_access_token'; // Line 51
 - **Storyblok Public Access Token**: In your Storyblok space settings → Access Tokens → Generate public token (used for content fetching in accessibility reports)
 - **Google Gemini API Key**: Visit [Google AI Studio](https://makersuite.google.com/app/apikey) → Create API key
 
-### 4. Development Setup
+### 3. Development Setup
 
 ```bash
 # Start development server
