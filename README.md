@@ -14,7 +14,7 @@
 </p>
 
 ### 🌐 Live Demo
-**Try PromptBlok live**: [https://prompt-blok-ai-powered-story-generator.vercel.app/](https://prompt-blok-ai-powered-story-generator.vercel.app/)
+**Try PromptBlok live**: [https://prompt-blok-ai-powered-story-genera.vercel.app/](https://prompt-blok-ai-powered-story-genera.vercel.app/)
 
 ## ✨ Features
 
